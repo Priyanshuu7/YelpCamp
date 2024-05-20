@@ -54,7 +54,9 @@ app.post("/campgrounds", function (req, res) {
   //get data from the from and add to thhe array
   var name = req.body.name;
   var image = req.body.image;
-  var newCampground = { name: name, image: image };
+  var desc = req.body.description;
+
+  var newCampground = { name: name, image: image, description: desc };
 
   // CREATE A NEW CAMPGROUND AND ADD TO DATABASE//
   Campground.create(newCampground)
@@ -72,15 +74,14 @@ app.get("/campgrounds/new", function (req, res) {
   res.render("new.ejs");
 });
 
-//show more//
-
+//show more about description//
 app.get("/campgrounds/:id", function (req, res) {
   Campground.findById(req.params.id)
-    .then((result) => {
-      res.render("show", { campground: result });
+    .then((foundCampground) => {
+      res.render("show", { campground: foundCampground });
     })
-    .catch((error) => {
-      console.log("something went wrong", error);
+    .catch((err) => {
+      console.log(err);
     });
 });
 
