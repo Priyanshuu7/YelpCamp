@@ -13,6 +13,7 @@ app.set("view engine", "ejs");
 var campgroundSchema = new mongoose.Schema({
   name: String,
   image: String,
+  description: String,
 });
 var Campground = mongoose.model("Campground", campgroundSchema);
 
@@ -22,6 +23,7 @@ var Campground = mongoose.model("Campground", campgroundSchema);
 //   name: "Priyanshu Rajak",
 //   image:
 //     "https://t3.ftcdn.net/jpg/05/33/76/38/360_F_533763874_3JZruw5ZGXNrVS47ARY3oiEJ0ubrUvJC.jpg",
+//     description : "This is a huge playground page made only for Users"
 // })
 //   .then((campground) => {
 //     console.log("new campground added:", Campground);
@@ -36,16 +38,18 @@ app.get("/", function (req, res) {
   res.render("landing");
 });
 
+// index route
 app.get("/campgrounds", function (req, res) {
   Campground.find({})
     .then((foundItems) => {
-      res.render("campgrounds", { campgrounds: foundItems });
+      res.render("index", { campgrounds: foundItems });
     })
     .catch((err) => {
       console.log(err);
     });
 });
 
+//add new campground route
 app.post("/campgrounds", function (req, res) {
   //get data from the from and add to thhe array
   var name = req.body.name;
@@ -63,9 +67,21 @@ app.post("/campgrounds", function (req, res) {
       console.log("something went wrong", error);
     });
 });
-// NEW CAMPFROUNDS PAGE//
+// show form route //
 app.get("/campgrounds/new", function (req, res) {
   res.render("new.ejs");
+});
+
+//show more//
+
+app.get("/campgrounds/:id", function (req, res) {
+  Campground.findById(req.params.id)
+    .then((result) => {
+      res.render("show", { campground: result });
+    })
+    .catch((error) => {
+      console.log("something went wrong", error);
+    });
 });
 
 // TO START THE SERVER//
