@@ -4,6 +4,7 @@ var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 var Campground = require("./models/campgrounds");
 var seedDB = require("./seeds");
+var Comment = require("./models/comment");
 
 seedDB();
 //connecting database here//
@@ -21,7 +22,7 @@ app.get("/", function (req, res) {
 app.get("/campgrounds", function (req, res) {
   Campground.find({})
     .then((foundItems) => {
-      res.render("index", { campgrounds: foundItems });
+      res.render("campgrounds/index", { campgrounds: foundItems });
     })
     .catch((err) => {
       console.log(err);
@@ -50,7 +51,7 @@ app.post("/campgrounds", function (req, res) {
 });
 // showing form route //
 app.get("/campgrounds/new", function (req, res) {
-  res.render("new.ejs");
+  res.render("campgrounds/new");
 });
 
 //show more about description//
@@ -59,13 +60,47 @@ app.get("/campgrounds/:id", function (req, res) {
     .populate("comments")
     .then((foundCampground) => {
       // render show templates//
-      res.render("show", { campground: foundCampground });
+      res.render("campgrounds/show", { campground: foundCampground });
       console.log(foundCampground);
     })
     .catch((err) => {
       console.log(err);
     });
 });
+
+//=====================================COMMENTS ROUTES=============================//
+app.get("/campgrounds/:id/comments/new", function (req, res) {
+  //find new campground by id //
+  Campground.findById(req.params.id.trim())
+    .then((campgrounds) => {
+      // render new comment from templates//
+      res.render("comments/new", { campground: campgrounds });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+app.post("/campgrounds/:id/comments", function (req, res) {
+  Campground.findById(req.params.id.trim())
+    .then((campground) => {
+      Comment.create(req.body.comment)
+        .then((comment) => {
+          campground.comments.push(comment);
+          campground.save();
+          res.redirect("/campgrounds/" + campground._id);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    })
+    .catch((error) => {
+      console.log("Something went wrong", error);
+      res.redirect("/campgrounds");
+    });
+});
+
+//=================================================================================//
 
 // TO START THE SERVER//
 app.listen(5000, function () {
