@@ -6,25 +6,22 @@ var data = [
     name: "Cloud rest",
     image:
       "https://www.nps.gov/mora/planyourvisit/images/OhanaCampground2016_CMeleedy_01_web.jpeg?maxwidth=1300&maxheight=1300&autorotate=false",
-    description: "blah blah blah",
+    description:
+      "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Saepe molestias inventore error odio? Culpa eum rem nobis blanditiis fuga ea voluptatem quaerat sunt repudiandae distinctio alias earum, voluptates sequi commodi.",
   },
   {
     name: "rohan next ",
     image:
       "https://www.nps.gov/mora/planyourvisit/images/OhanaCampground2016_CMeleedy_01_web.jpeg?maxwidth=1300&maxheight=1300&autorotate=false",
-    description: "blah blah blah",
+    description:
+      "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Saepe molestias inventore error odio? Culpa eum rem nobis blanditiis fuga ea voluptatem quaerat sunt repudiandae distinctio alias earum, voluptates sequi commodi.",
   },
   {
     name: "descpacito rest",
     image:
       "https://www.nps.gov/mora/planyourvisit/images/OhanaCampground2016_CMeleedy_01_web.jpeg?maxwidth=1300&maxheight=1300&autorotate=false",
-    description: "blah blah blah",
-  },
-  {
-    name: "Cloud rest",
-    image:
-      "https://www.nps.gov/mora/planyourvisit/images/OhanaCampground2016_CMeleedy_01_web.jpeg?maxwidth=1300&maxheight=1300&autorotate=false",
-    description: "blah blah blah",
+    description:
+      "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Saepe molestias inventore error odio? Culpa eum rem nobis blanditiis fuga ea voluptatem quaerat sunt repudiandae distinctio alias earum, voluptates sequi commodi.",
   },
 ];
 

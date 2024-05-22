@@ -12,6 +12,7 @@ mongoose.connect("mongodb://localhost/yelp_camp");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
+app.use(express.static(__dirname + "/public"));
 
 // ROOT ROUTE//
 app.get("/", function (req, res) {
@@ -69,6 +70,7 @@ app.get("/campgrounds/:id", function (req, res) {
 });
 
 //=====================================COMMENTS ROUTES=============================//
+
 app.get("/campgrounds/:id/comments/new", function (req, res) {
   //find new campground by id //
   Campground.findById(req.params.id.trim())
