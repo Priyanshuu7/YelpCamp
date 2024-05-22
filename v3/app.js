@@ -5,8 +5,33 @@ var mongoose = require("mongoose");
 var Campground = require("./models/campgrounds");
 var seedDB = require("./seeds");
 var Comment = require("./models/comment");
+var passport = require("passport");
+var localStrategy = require("passport-local");
+var User = require("./models/user");
 
+//CALLING THE SEED FUNCTION//
 seedDB();
+
+//PASSPORT CONFIGURTION//
+app.use(
+  require("express-session")({
+    secret: "Once again rusty wins the cutest dog!",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+app.use(function (req, res, next) {
+  res.locals.currentUser = req.user;
+  next();
+});
+
 //connecting database here//
 mongoose.connect("mongodb://localhost/yelp_camp");
 
@@ -23,12 +48,17 @@ app.get("/", function (req, res) {
 app.get("/campgrounds", function (req, res) {
   Campground.find({})
     .then((foundItems) => {
-      res.render("campgrounds/index", { campgrounds: foundItems });
+      res.render("campgrounds/index", {
+        campgrounds: foundItems,
+        currentUser: req.user,
+      });
     })
     .catch((err) => {
       console.log(err);
     });
 });
+
+//==============================================================CAMPGROUND ROUTES================================================//
 
 //add new campground route
 app.post("/campgrounds", function (req, res) {
@@ -51,7 +81,7 @@ app.post("/campgrounds", function (req, res) {
     });
 });
 // showing form route //
-app.get("/campgrounds/new", function (req, res) {
+app.get("/campgrounds/new", isLoggedIn, function (req, res) {
   res.render("campgrounds/new");
 });
 
@@ -69,9 +99,11 @@ app.get("/campgrounds/:id", function (req, res) {
     });
 });
 
-//=====================================COMMENTS ROUTES=============================//
+//==============================================================================================================================//
 
-app.get("/campgrounds/:id/comments/new", function (req, res) {
+//===========================================================COMMENTS ROUTES===================================================//
+
+app.get("/campgrounds/:id/comments/new", isLoggedIn, function (req, res) {
   //find new campground by id //
   Campground.findById(req.params.id.trim())
     .then((campgrounds) => {
@@ -83,8 +115,9 @@ app.get("/campgrounds/:id/comments/new", function (req, res) {
     });
 });
 
-app.post("/campgrounds/:id/comments", function (req, res) {
-  Campground.findById(req.params.id.trim())
+app.post("/campgrounds/:id/comments", isLoggedIn, function (req, res) {
+  var ID = req.params.id.trim();
+  Campground.findById(ID)
     .then((campground) => {
       Comment.create(req.body.comment)
         .then((comment) => {
@@ -102,7 +135,53 @@ app.post("/campgrounds/:id/comments", function (req, res) {
     });
 });
 
-//=================================================================================//
+//=================================================================================================================================//
+
+//====================================================AUTHENTHICATION ROUTES=====================================================//
+
+//Show the register form//
+app.get("/register", function (req, res) {
+  res.render("register");
+});
+// handle the sign up[ logic//
+app.post("/register", function (req, res) {
+  var newUser = new User({ username: req.body.username });
+  User.register(newUser, req.body.password, function (err, user) {
+    if (err) {
+      console.log(err);
+      return res.render("register");
+    }
+    passport.authenticate("local")(req, res, function () {
+      res.redirect("/campgrounds");
+    });
+  });
+});
+//Show the login form//
+app.get("/login", function (req, res) {
+  res.render("login");
+});
+// handle the login logic//
+app.post(
+  "/login",
+  passport.authenticate("local", {
+    successRedirect: "/campgrounds",
+    failureRedirect: "/login",
+  }),
+  function (req, res) {}
+);
+//logout logic//
+app.get("/logout", function (req, res) {
+  req.logout(function (req, res) {});
+  res.redirect("/campgrounds");
+});
+
+//funciotn for checkig whaether the user is login or not//
+function isLoggedIn(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect("/login");
+}
 
 // TO START THE SERVER//
 app.listen(5000, function () {
