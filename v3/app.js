@@ -8,6 +8,7 @@ var Comment = require("./models/comment");
 var passport = require("passport");
 var localStrategy = require("passport-local");
 var User = require("./models/user");
+var methodOveride = require("method-override");
 
 //require routes//
 var commentRoutes = require("./routes/comments");
@@ -20,6 +21,7 @@ mongoose.connect("mongodb://localhost/yelp_camp");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
+app.use(methodOveride("_method"));
 //CALLING THE SEED FUNCTION//
 //seedDB();
 
