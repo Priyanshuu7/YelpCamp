@@ -31,14 +31,15 @@ router.post("/", middleware.isLoggedIn, function (req, res) {
           comment.save();
           campground.comments.push(comment);
           campground.save();
+          req.flash("success", "SuccessFully added comment");
           res.redirect("/campgrounds/" + campground._id);
         })
         .catch((error) => {
+          req.flash("error", "something went wrong");
           console.log(error);
         });
     })
     .catch((error) => {
-      console.log("Something went wrong", error);
       res.redirect("/campgrounds");
     });
 });
@@ -84,6 +85,7 @@ router.delete(
   function (req, res) {
     Comment.findByIdAndDelete(req.params.comment_id)
       .then(() => {
+        req.flash("success", " Comment deleted");
         res.redirect("/campgrounds/" + req.params.id);
       })
       .catch((error) => {
