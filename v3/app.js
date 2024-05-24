@@ -9,6 +9,7 @@ var passport = require("passport");
 var localStrategy = require("passport-local");
 var User = require("./models/user");
 var methodOveride = require("method-override");
+var flash = require("connect-flash");
 
 //require routes//
 var commentRoutes = require("./routes/comments");
@@ -22,6 +23,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 app.use(methodOveride("_method"));
+app.use(flash());
 //CALLING THE SEED FUNCTION//
 //seedDB();
 
@@ -43,12 +45,13 @@ passport.deserializeUser(User.deserializeUser());
 //extratxing the currently logged in user//
 app.use(function (req, res, next) {
   res.locals.currentUser = req.user;
+  res.locals.message = req.flash("error");
   next();
 });
 
+app.use("/", authRoutes);
 app.use("/campgrounds", campgroundsRoutes);
 app.use("/campgrounds/:id/comments", commentRoutes);
-app.use("/", authRoutes);
 
 // TO START THE SERVER//
 app.listen(5000, function () {

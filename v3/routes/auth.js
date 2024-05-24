@@ -42,8 +42,14 @@ router.post(
 );
 //logout logic//
 router.get("/logout", function (req, res) {
-  req.logout(function (req, res) {});
-  res.redirect("/campgrounds");
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    // Other logout logic
+    req.flash("error", "Logged you out");
+    res.redirect("/campgrounds");
+  });
 });
 
 //middleware//
