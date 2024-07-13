@@ -50,6 +50,7 @@ app.use(function (req, res, next) {
   next();
 });
 
+// requires the routes //
 app.use("/", authRoutes);
 app.use("/campgrounds", campgroundsRoutes);
 app.use("/campgrounds/:id/comments", commentRoutes);
