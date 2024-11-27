@@ -12,6 +12,8 @@ var methodOveride = require("method-override");
 var flash = require("connect-flash");
 
 //require routes//
+
+//require routes//
 var commentRoutes = require("./routes/comments");
 var campgroundsRoutes = require("./routes/campgrounds");
 var authRoutes = require("./routes/auth");
