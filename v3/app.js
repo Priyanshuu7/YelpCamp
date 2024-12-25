@@ -1,4 +1,4 @@
-var express = require("express");
+Ivar express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
@@ -59,7 +59,8 @@ app.use("/", authRoutes);
 app.use("/campgrounds", campgroundsRoutes);
 app.use("/campgrounds/:id/comments", commentRoutes);
 
-//SERVER code//
+//SERVER code//SERVER code//
+app.
 app.listen(5000, function () {
   console.log("The YelpCamp server has started");
 });
